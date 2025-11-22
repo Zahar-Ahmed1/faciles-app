@@ -1,0 +1,5 @@
+[
+  { "name": "Client 1", "logo": "https://readdy.ai/api/search-image?query=Company%20logo&width=120&height=60&seq=c1&orientation=landscape" },
+  { "name": "Client 2", "logo": "https://readdy.ai/api/search-image?query=Company%20logo&width=120&height=60&seq=c2&orientation=landscape" },
+  { "name": "Client 3", "logo": "https://readdy.ai/api/search-image?query=Company%20logo&width=120&height=60&seq=c3&orientation=landscape" }
+]

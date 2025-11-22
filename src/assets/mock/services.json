@@ -1,0 +1,6 @@
+[
+  { "title": "Office Cleaning", "description": "Daily maintenance, deep cleaning, sanitization.", "icon": "ri-brush-line" },
+  { "title": "Security Solutions", "description": "Guards, CCTV, access control.", "icon": "ri-shield-check-line" },
+  { "title": "Procurement & Supply", "description": "Equipment and consumables sourcing.", "icon": "ri-shopping-cart-line" },
+  { "title": "Maintenance Services", "description": "HVAC, electrical, plumbing, preventive.", "icon": "ri-tools-line" }
+]
