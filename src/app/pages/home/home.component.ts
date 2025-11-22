@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import gsap from 'gsap';
@@ -9,7 +9,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
   selector: 'app-home',
   imports: [CommonModule, RouterLink],
   template: `
-    <section id="hero" class="relative pt-20 min-h-[640px] flex items-center w-full bg-fixed" style="background-image: url('https://readdy.ai/api/search-image?query=Modern%20professional%20office%20building%20interior&width=1920&height=1080&seq=hero1&orientation=landscape'); background-size: cover; background-position: center;">
+    <section id="hero" class="relative pt-20 min-h-[640px] flex items-center w-full bg-fixed" style="background-image: url('https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80'); background-size: cover; background-position: center;">
       <div class="absolute inset-0 bg-primary bg-opacity-70"></div>
       <div class="container mx-auto px-4 relative z-10 w-full">
         <div class="max-w-3xl">
@@ -117,34 +117,68 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
     </section>
   `
 })
-export class HomeComponent implements AfterViewInit, OnDestroy {
+export class HomeComponent implements AfterViewInit {
   ngAfterViewInit() {
-    gsap.registerPlugin(ScrollTrigger);
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!reduce) {
-      gsap.from('.heading', { y: 20, opacity: 0, duration: 0.8, ease: 'power2.out' });
-    }
-    const fadeUps = document.querySelectorAll('.fade-up');
-    fadeUps.forEach(el => {
-      gsap.fromTo(el,
-      { y: 24, opacity: 0 },
-      {
-        y: 24,
-        opacity: 0,
-        duration: 0.6,
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: el,
-          start: 'top 80%',
-          toggleActions: 'play none none reverse'
+    // Attendre un peu pour s'assurer que le DOM est complètement rendu
+    setTimeout(() => {
+      this.initAnimations();
+    }, 100);
+  }
+
+  private initAnimations() {
+    try {
+      gsap.registerPlugin(ScrollTrigger);
+
+      // Hero heading - animation d'entrée au chargement
+      gsap.fromTo('.heading',
+        { y: 0, opacity: 1 },
+        {
+          y: 20,
+          opacity: 0,
+          duration: 0,
+          immediateRender: false
         }
+      );
+      gsap.to('.heading', {
+        y: 0,
+        opacity: 1,
+        duration: 0.8,
+        ease: 'power2.out',
+        delay: 0.2
       });
-    });
-    const hero = document.getElementById('hero');
-    if (hero) {
-      if (!reduce) {
+
+      // Fade-up elements - animation au scroll seulement
+      const fadeUps = document.querySelectorAll('.fade-up');
+      fadeUps.forEach((el: any) => {
+        gsap.fromTo(el,
+          { y: 0, opacity: 1 },
+          {
+            y: 24,
+            opacity: 0,
+            duration: 0,
+            immediateRender: false,
+            scrollTrigger: {
+              trigger: el,
+              start: 'top 80%',
+              toggleActions: 'play none none reverse',
+              onEnter: () => {
+                gsap.to(el, {
+                  y: 0,
+                  opacity: 1,
+                  duration: 0.6,
+                  ease: 'power2.out'
+                });
+              }
+            }
+          }
+        );
+      });
+
+      // Parallax effect on hero
+      const hero = document.getElementById('hero');
+      if (hero) {
         gsap.to(hero, {
-          backgroundPosition: '50% 40px',
+          backgroundPosition: '50% 60px',
           ease: 'none',
           scrollTrigger: {
             trigger: hero,
@@ -154,9 +188,10 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
           }
         });
       }
+
+    } catch (error) {
+      console.warn('GSAP animation error:', error);
+      // Si GSAP ne fonctionne pas, le contenu reste visible
     }
-  }
-  ngOnDestroy(): void {
-    ScrollTrigger.getAll().forEach(t => t.kill());
   }
 }
